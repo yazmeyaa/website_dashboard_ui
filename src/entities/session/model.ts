@@ -6,7 +6,11 @@ export const LocalStorageKey = "auth";
 
 export type TokenType = string | null;
 
-export const $token = createStore<TokenType>(null);
+function getTokenFromLocalStorage(): string | null {
+  return localStorage.getItem(LocalStorageKey);
+}
+
+export const $token = createStore<TokenType>(getTokenFromLocalStorage());
 
 export const loginFx = createEffect((credentails: AuthCredentails) => {
   return backendApi.login(credentails);
@@ -14,6 +18,12 @@ export const loginFx = createEffect((credentails: AuthCredentails) => {
 
 $token.on(loginFx.doneData, (_store, res) => {
   return res;
+});
+
+$token.on(loginFx.doneData, (_store, token) => {
+  if (!token) return token;
+  localStorage.setItem(LocalStorageKey, token);
+  return token;
 });
 
 export const eventLogin = createEvent("login");

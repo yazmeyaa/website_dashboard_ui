@@ -8,15 +8,24 @@ import {
   Project,
   UpdateProjectRequestParams,
 } from "./types";
+import { getTokenFromLocalStorage } from "../../entities/session/helpers";
 
 export class BackendApi {
   private axiosInstance: AxiosInstance;
+  private token: string | null = getTokenFromLocalStorage();
 
   constructor(baseUrl: string) {
     this.axiosInstance = axios.create();
     this.axiosInstance.defaults.baseURL = baseUrl;
     this.axiosInstance.defaults.headers.common["Content-Type"] =
       "application/json";
+  }
+
+  public setToken(token: string | null): void {
+    this.token = token;
+    if (token) {
+      this.axiosInstance.defaults.headers.common.Authorization = `Bearer ${this.token}`;
+    }
   }
 
   public async getProjectList(): Promise<Project[]> {

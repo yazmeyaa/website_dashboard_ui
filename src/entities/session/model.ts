@@ -1,14 +1,9 @@
 import { combine, createEffect, createEvent, createStore } from "effector";
 import { AuthCredentails } from "../../shared/api/types";
 import { backendApi } from "../../shared/api";
-
-export const LocalStorageKey = "auth";
+import { LocalStorageKey, getTokenFromLocalStorage } from "./helpers";
 
 export type TokenType = string | null;
-
-function getTokenFromLocalStorage(): string | null {
-  return localStorage.getItem(LocalStorageKey);
-}
 
 export const $token = createStore<TokenType>(getTokenFromLocalStorage());
 
@@ -24,6 +19,10 @@ $token.on(loginFx.doneData, (_store, token) => {
   if (!token) return token;
   localStorage.setItem(LocalStorageKey, token);
   return token;
+});
+
+$token.on(loginFx.doneData, (_store, token) => {
+  backendApi.setToken(token);
 });
 
 export const eventLogin = createEvent("login");
@@ -43,3 +42,5 @@ export const $session = combine(
     };
   }
 );
+export { getTokenFromLocalStorage };
+

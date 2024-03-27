@@ -13,8 +13,13 @@ export type BaseResponse<T> = {
   data: T;
 };
 
-export type GetProjectsListResponse = BaseResponse<Project[]>
-export type GetProjectResponse = BaseResponse<Project>
-export type CreateProjectResponse = BaseResponse<null>
-export type CreateProjectRequestParams = Omit<Project, "id">
-export type UpdateProjectRequestParams = Omit<Project, "id">
+export type GetProjectsListResponse = BaseResponse<Project[]>;
+export type GetProjectResponse = BaseResponse<Project>;
+export type CreateProjectResponse = BaseResponse<null>;
+export type CreateProjectRequestParams = Omit<Project, "id">;
+export type UpdateProjectRequestParams = Omit<Project, "id">;
+
+export type AuthCredentails = {
+  username: string;
+  password: string;
+};

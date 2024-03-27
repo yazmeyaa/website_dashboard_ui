@@ -15,26 +15,24 @@ import { DeleteIcon } from "../../shared/ui/icons/delete";
 import { BackendApi } from "../../shared/api";
 
 export const ProjectsTable = () => {
-    const [data, setData] = useState<Project[]>([])
+  const [data, setData] = useState<Project[] | null>(null);
 
-    useEffect(() => {
-        const api = new BackendApi("http://localhost:3000/api")
-        api.getProjectList()
-        .then(data => setData(data ?? []))
+  useEffect(() => {
+    const api = new BackendApi("http://151.115.33.89:17645/api");
+    api.getProjectList().then((data) => setData(data));
+  }, []);
 
-    }, [])
-
-    const renderCell = useCallback((project: Project, columnKey: Key) => {
+  const renderCell = useCallback((project: Project, columnKey: Key) => {
     switch (columnKey) {
       case "actions":
         return (
           <div className="relative flex items-center gap-2">
-            <Tooltip content="Edit user">
+            <Tooltip aria-label="edit project" content="Edit user">
               <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
                 <EditIcon />
               </span>
             </Tooltip>
-            <Tooltip color="danger" content="Delete user">
+            <Tooltip aria-label="delete project" color="danger" content="Delete user">
               <span className="text-lg text-danger cursor-pointer active:opacity-50">
                 <DeleteIcon />
               </span>
@@ -46,13 +44,12 @@ export const ProjectsTable = () => {
       }
     }
   }, []);
+
+  if (data === null) return <h1>{"Проекты не найдены :("}</h1>;
   return (
     <div>
       <div>
-        <h2 className="text-4xl my-4">Проекты</h2>
-      </div>
-      <div>
-        <Table>
+        <Table aria-label="projects table">
           <TableHeader columns={columns}>
             {(column) => (
               <TableColumn

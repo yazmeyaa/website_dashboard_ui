@@ -1,5 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 import {
+  AuthCredentails,
   CreateProjectRequestParams,
   CreateProjectResponse,
   GetProjectResponse,
@@ -56,4 +57,13 @@ export class BackendApi {
 
     return null;
   }
+
+  public async login(credentails: AuthCredentails): Promise<string | null> {
+    const result = await this.axiosInstance.post("/auth/login", credentails);
+    console.log(result.headers);
+    const token = result.headers["x-token"] ?? null;
+    return token;
+  }
 }
+
+export const backendApi = new BackendApi("http://151.115.33.89:17645/api");

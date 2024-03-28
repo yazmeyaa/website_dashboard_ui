@@ -1,75 +1,83 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableColumn,
-  TableHeader,
-  TableRow,
-  Tooltip,
-} from "@nextui-org/react";
-import { Key, useCallback, useEffect, useState } from "react";
-import { columns } from "./data";
+import { useEffect, useState } from "react";
 import { Project } from "../../shared/api/types";
-import { EditIcon } from "../../shared/ui/icons/edit";
-import { DeleteIcon } from "../../shared/ui/icons/delete";
-import { BackendApi } from "../../shared/api";
+import { backendApi } from "../../shared/api";
+import { ProjectsTable } from "./ui/table";
+import { EditProjectModal } from "../../features/edit-project/ui/edit-project";
+import { Button, Spacer } from "@nextui-org/react";
+import { AddProjectModal } from "../../features/add-project";
+import { DeleteProjectModal } from "../../features/delete-project";
 
-export const ProjectsTable = () => {
+export const ManageProjectsTable = () => {
   const [data, setData] = useState<Project[] | null>(null);
+  const [editingProject, setEditingProject] = useState<Project | null>(null);
+  const [deleteProjectModal, setDeleteProjectModal] = useState<Project | null>(
+    null
+  );
+  const [addProjectModalOpen, setAddProjectModalOpen] = useState(false);
+
+  async function fetchProjectsList() {
+    const data = await backendApi.getProjectList();
+    setData(data);
+  }
 
   useEffect(() => {
-    const api = new BackendApi("http://151.115.33.89:17645/api");
-    api.getProjectList().then((data) => setData(data));
+    fetchProjectsList();
   }, []);
 
-  const renderCell = useCallback((project: Project, columnKey: Key) => {
-    switch (columnKey) {
-      case "actions":
-        return (
-          <div className="relative flex items-center gap-2">
-            <Tooltip aria-label="edit project" content="Edit user">
-              <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                <EditIcon />
-              </span>
-            </Tooltip>
-            <Tooltip aria-label="delete project" color="danger" content="Delete user">
-              <span className="text-lg text-danger cursor-pointer active:opacity-50">
-                <DeleteIcon />
-              </span>
-            </Tooltip>
-          </div>
-        );
-      default: {
-        return <div>{project[columnKey as keyof Project]}</div>;
-      }
+  function handleEditProject(project: Project) {
+    setEditingProject(project);
+    fetchProjectsList();
+  }
+
+  function handleDeteleProject(project: Project) {
+    setDeleteProjectModal(project);
+  }
+
+  async function handleDeteleProjectFromModal(project: Project | null) {
+    if (!project) {
+      setDeleteProjectModal(null);
+      return;
     }
-  }, []);
+    setDeleteProjectModal(null);
+    await backendApi.deleteProject(project.id);
+    fetchProjectsList();
+  }
 
-  if (data === null) return <h1>{"Проекты не найдены :("}</h1>;
   return (
-    <div>
+    <div className="px-6">
       <div>
-        <Table aria-label="projects table">
-          <TableHeader columns={columns}>
-            {(column) => (
-              <TableColumn
-                key={column.uid}
-                align={column.uid === "actions" ? "center" : "start"}
-              >
-                {column.name}
-              </TableColumn>
-            )}
-          </TableHeader>
-          <TableBody items={data}>
-            {(item) => (
-              <TableRow key={item.id}>
-                {(columnKey) => (
-                  <TableCell>{renderCell(item, columnKey)}</TableCell>
-                )}
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+        <DeleteProjectModal
+          project={deleteProjectModal}
+          onProjectDelete={handleDeteleProjectFromModal}
+        />
+        <EditProjectModal
+          onModalClose={() => {
+            setEditingProject(null);
+            fetchProjectsList();
+          }}
+          project={editingProject}
+        />
+        <AddProjectModal
+          isModalOpen={addProjectModalOpen}
+          onModalClose={() => {
+            setAddProjectModalOpen(false);
+            fetchProjectsList();
+          }}
+        />
+        <Spacer />
+        <ProjectsTable
+          onProjectEdit={handleEditProject}
+          onProjectDelete={handleDeteleProject}
+          projects={data}
+        />
+        <Spacer />
+        <Button
+          variant="bordered"
+          color="primary"
+          onClick={() => setAddProjectModalOpen(true)}
+        >
+          Добавить проект
+        </Button>
       </div>
     </div>
   );

@@ -10,7 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@nextui-org/modal": "^2.0.29",
     "@nextui-org/react": "^2.2.10",
+    "@nextui-org/system": "^2.0.15",
+    "@nextui-org/theme": "^2.1.18",
     "@types/compose-function": "^0.0.33",
     "axios": "^1.6.8",
     "compose-function": "^3.0.3",

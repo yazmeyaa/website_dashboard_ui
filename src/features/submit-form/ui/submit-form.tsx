@@ -13,12 +13,12 @@ export const SubmitForm: FC<SubmitFormProps> = ({
 }) => {
   function handleSubmitForm(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const obj: Record<string, string> = {};
+    const obj: Record<string, string | number> = {};
 
     const formData = new FormData(event.currentTarget);
     fields.forEach((key) => {
       const value = formData.get(key.name) as string;
-      obj[key.name] = value;
+      obj[key.name] = isNaN(parseInt(value)) ? value : parseInt(value);
     });
 
     onSubmit(obj);
@@ -38,6 +38,9 @@ export const SubmitForm: FC<SubmitFormProps> = ({
               required={field.required}
               name={field.name}
               type={field.type}
+              defaultValue={
+                field.defaultValue ? String(field.defaultValue) : undefined
+              }
             />
           );
         })}

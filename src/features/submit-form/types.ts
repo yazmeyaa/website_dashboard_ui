@@ -5,11 +5,12 @@ export type SubmitFormField = {
   displayName?: string;
   required: boolean;
   type?: HTMLInputTypeAttribute;
+  defaultValue?: string | number
 };
 
 export interface SubmitFormProps {
   fields: SubmitFormField[];
-  onSubmit: (result: Record<string, string>) => void;
+  onSubmit: (result: Record<string, string | number>) => void;
   submitButtonText?: string;
   disabled?: boolean
 }

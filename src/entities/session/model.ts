@@ -12,17 +12,18 @@ export const loginFx = createEffect((credentails: AuthCredentails) => {
 });
 
 $token.on(loginFx.doneData, (_store, res) => {
+  console.log("Done data", { res });
   return res;
 });
 
-$token.on(loginFx.doneData, (_store, token) => {
-  if (!token) return token;
-  localStorage.setItem(LocalStorageKey, token);
-  return token;
+$token.watch((state) => {
+  console.log("Store change:", state);
 });
 
 $token.on(loginFx.doneData, (_store, token) => {
+  if (token) localStorage.setItem(LocalStorageKey, token);
   backendApi.setToken(token);
+  return token;
 });
 
 export const eventLogin = createEvent("login");
@@ -43,4 +44,3 @@ export const $session = combine(
   }
 );
 export { getTokenFromLocalStorage };
-

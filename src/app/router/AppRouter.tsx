@@ -5,8 +5,6 @@ import { NotFoundPage } from "../../pages/not-found";
 import { RouteDescription, RouteName } from "../../shared/config/routes/routes";
 import { ProtectedRoute } from "../../shared/config/routes/protected-routes";
 import { HomePage } from "../../pages/home";
-import { useUnit } from "effector-react";
-import { $token } from "../../entities/session/model";
 
 const routes: RouteDescription[] = [
   {
@@ -39,10 +37,8 @@ const routesContent = routes.map(
 );
 
 export const AppRouter = () => {
-  const token = useUnit($token);
   return (
     <SuspenseLayout>
-      {token ?? "NO TOKEN"}
       <Routes>
         {routesContent}
         <Route path="*" element={<NotFoundPage />} />

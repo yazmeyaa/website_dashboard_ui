@@ -794,7 +794,7 @@
     "@react-types/menu" "^3.9.5"
     "@react-types/shared" "^3.21.0"
 
-"@nextui-org/modal@2.0.29":
+"@nextui-org/modal@2.0.29", "@nextui-org/modal@^2.0.29":
   version "2.0.29"
   resolved "https://registry.yarnpkg.com/@nextui-org/modal/-/modal-2.0.29.tgz#a71620bcc1f9d7bd37ed3d54e36e3e5270e5b8db"
   integrity sha512-C/pvw0fAPWKbfMoGfIVZWhMRbe+DRGEg7GqPVY7EmW4FSSIK7Sfdn6Jxm+sSv+a7xHpDr86nirFbvN3S4jCaHw==
@@ -1089,7 +1089,7 @@
   dependencies:
     clsx "^1.2.1"
 
-"@nextui-org/system@2.0.15":
+"@nextui-org/system@2.0.15", "@nextui-org/system@^2.0.15":
   version "2.0.15"
   resolved "https://registry.yarnpkg.com/@nextui-org/system/-/system-2.0.15.tgz#b0a532f0b3a27e911c076d2ac180d38c72d64952"
   integrity sha512-WFDq+Rx6D+gmK1YGEG2RBARPK9EOYonQDt5Tq2tUchzOOqj3kXXcM5Z0F3fudM59eIncLa/tX/ApJSTLry+hsw==
@@ -1140,7 +1140,7 @@
     "@react-types/tabs" "^3.3.3"
     scroll-into-view-if-needed "3.0.10"
 
-"@nextui-org/theme@2.1.18":
+"@nextui-org/theme@2.1.18", "@nextui-org/theme@^2.1.18":
   version "2.1.18"
   resolved "https://registry.yarnpkg.com/@nextui-org/theme/-/theme-2.1.18.tgz#32862cde091712710e8ec4877f0aea0c85f2bf14"
   integrity sha512-2ptDh350lVD0yejZTpGv4fkeoGKB8+B/Coblzpjijfofn/t6MQIRIRRLp04wCCa/IbeevjS2wyadWpMDtVh3CQ==

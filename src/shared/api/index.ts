@@ -13,19 +13,28 @@ import { getTokenFromLocalStorage } from "../../entities/session/helpers";
 export class BackendApi {
   private axiosInstance: AxiosInstance;
   private token: string | null = getTokenFromLocalStorage();
+  private baseUrl: string;
 
   constructor(baseUrl: string) {
-    this.axiosInstance = axios.create();
-    this.axiosInstance.defaults.baseURL = baseUrl;
-    this.axiosInstance.defaults.headers.common["Content-Type"] =
-      "application/json";
+    this.baseUrl = baseUrl;
+    this.axiosInstance = this.createInstance();
+  }
+
+  private createInstance(): AxiosInstance {
+    const instance = axios.create({
+      headers: {
+        Authorization: `Bearer ${this.token}` ?? undefined,
+        "Content-Type": "application/json",
+      },
+      baseURL: this.baseUrl,
+    });
+
+    return instance;
   }
 
   public setToken(token: string | null): void {
     this.token = token;
-    if (token) {
-      this.axiosInstance.defaults.headers.common.Authorization = `Bearer ${this.token}`;
-    }
+    this.axiosInstance = this.createInstance();
   }
 
   public async getProjectList(): Promise<Project[]> {
@@ -62,17 +71,22 @@ export class BackendApi {
     id: string | number,
     project: UpdateProjectRequestParams
   ): Promise<null> {
+    console.log(this.axiosInstance.defaults.headers);
     await this.axiosInstance.patch(`/projects/${id}`, project);
 
     return null;
   }
 
   public async login(credentails: AuthCredentails): Promise<string | null> {
-    const result = await this.axiosInstance.post("/auth/login", credentails);
+    const result = await this.axiosInstance("/auth/login", {
+      method: "POST",
+      data: credentails,
+    });
     console.log(result.headers);
     const token = result.headers["x-token"] ?? null;
     return token;
   }
 }
 
-export const backendApi = new BackendApi("http://151.115.33.89:17645/api");
+export const backendApi = new BackendApi("http://localhost:3000/api");
+// export const backendApi = new BackendApi("http://151.115.33.89:17645/api");

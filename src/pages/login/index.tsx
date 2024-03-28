@@ -18,7 +18,7 @@ export const LoginPage = () => {
     },
   ];
 
-  function handleSubmitForm(obj: Record<string, string>) {
+  function handleSubmitForm(obj: Record<string, string | number>) {
     loginFx(obj as AuthCredentails);
   }
 

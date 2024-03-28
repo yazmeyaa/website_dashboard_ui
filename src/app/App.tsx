@@ -4,7 +4,9 @@ import { AppRouter } from "./router/AppRouter";
 function App() {
   return (
     <AppProvider>
-      <AppRouter />
+      <main className="dark text-foreground bg-background">
+        <AppRouter />
+      </main>
     </AppProvider>
   );
 }

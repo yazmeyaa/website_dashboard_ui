@@ -1,4 +1,4 @@
-import { FC, Key, MouseEvent, useCallback } from "react";
+import { FC } from "react";
 import { Project } from "../../../shared/api/types";
 import {
   Table,
@@ -7,81 +7,30 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
-  Tooltip,
 } from "@nextui-org/react";
 import { columns } from "../data";
-import { EditIcon } from "../../../shared/ui/icons/edit";
-import { DeleteIcon } from "../../../shared/ui/icons/delete";
+import { openSidebar } from "../../../features/projects/manage-sidebar/model/model";
+import { TruncateText } from "../../../shared/ui/truncate-text/truncate-text";
 
 export type ProjectsTableProps = {
-  projects: Project[] | null;
-  onProjectEdit?: (project: Project) => void;
-  onProjectDelete?: (project: Project) => void;
+  projects: Project[];
 };
 
-export const ProjectsTable: FC<ProjectsTableProps> = ({
-  projects,
-  onProjectEdit,
-  onProjectDelete,
-}) => {
-  const handleEditProject = useCallback(
-    (event: MouseEvent<SVGElement>, project: Project) => {
-      event.preventDefault();
-      onProjectEdit?.(project);
-    },
-    [onProjectEdit]
-  );
-
-  const handleDeleteProject = useCallback(
-    async (project: Project) => {
-      onProjectDelete?.(project);
-    },
-    [onProjectDelete]
-  );
-
-  const renderCell = useCallback(
-    (project: Project, columnKey: Key) => {
-      switch (columnKey) {
-        case "actions":
-          return (
-            <div className="relative flex items-center gap-2">
-              <Tooltip aria-label="edit project" content="Edit project">
-                <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                  <EditIcon
-                    onClick={(event) => handleEditProject(event, project)}
-                  />
-                </span>
-              </Tooltip>
-              <Tooltip
-                aria-label="delete project"
-                color="danger"
-                content="Delete project"
-              >
-                <span className="text-lg text-danger cursor-pointer active:opacity-50">
-                  <DeleteIcon onClick={() => handleDeleteProject(project)} />
-                </span>
-              </Tooltip>
-            </div>
-          );
-        default: {
-          return <div>{project[columnKey as keyof Project]}</div>;
-        }
-      }
-    },
-    [handleEditProject, handleDeleteProject]
-  );
-
-  if (projects === null)
-    return (
-      <div>
-        <h1>{"Проекты не найдены :("}</h1>
-      </div>
-    );
-
+export const ProjectsTable: FC<ProjectsTableProps> = ({ projects }) => {
+  console.log({ projects });
   return (
     <div className="my-4">
       <h1 className="text-lg">Список проектов</h1>
-      <Table aria-label="projects table">
+      <Table
+        aria-label="projects table"
+        selectionMode="single"
+        onRowAction={(key) => {
+          const selectedProject = projects.find((project) => {
+            return String(project.id) === key;
+          });
+          if (selectedProject) openSidebar(selectedProject);
+        }}
+      >
         <TableHeader columns={columns}>
           {(column) => (
             <TableColumn
@@ -92,11 +41,18 @@ export const ProjectsTable: FC<ProjectsTableProps> = ({
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody items={projects}>
+        <TableBody
+          emptyContent={"Проекты не найдены :("}
+          items={projects ?? []}
+        >
           {(item) => (
-            <TableRow key={item.id}>
+            <TableRow key={item.id} className="cursor-pointer">
               {(columnKey) => (
-                <TableCell>{renderCell(item, columnKey)}</TableCell>
+                <TableCell>
+                  <TruncateText>
+                    {item[columnKey as keyof typeof item]}
+                  </TruncateText>
+                </TableCell>
               )}
             </TableRow>
           )}

@@ -1,32 +1,35 @@
 import { Route, Routes } from "react-router-dom";
 import { SuspenseLayout } from "../../shared/ui/layouts/suspense-layouts";
-import { LoginPage } from "../../pages/login";
 import { NotFoundPage } from "../../pages/not-found";
-import { RouteDescription, RouteName } from "../../shared/config/routes/routes";
 import { ProtectedRoute } from "../../shared/config/routes/protected-routes";
-import { HomePage } from "../../pages/home";
+import { ComponentType, FC, PropsWithChildren, ReactNode } from "react";
+import { routes } from "./consts";
 
-const routes: RouteDescription[] = [
-  {
-    path: RouteName.LOGIN_PAGE,
-    component: LoginPage,
-  },
-  {
-    path: RouteName.HOME_PAGE,
-    component: HomePage,
-    protected: true,
-  },
-];
+export const RenderLayout: FC<{
+  children: ReactNode;
+  layout: ComponentType<PropsWithChildren> | undefined;
+}> = ({ children, layout: Layout }) => {
+  if (typeof Layout === "undefined") return children;
+
+  return <Layout>{children}</Layout>;
+};
 
 const routesContent = routes.map(
-  ({ protected: protectedRoute, path, component: Component }) => {
+  ({
+    protected: protectedRoute,
+    path,
+    component: Component,
+    layout: Layout,
+  }) => {
     if (protectedRoute)
       return (
         <Route
           key={path}
           element={
             <ProtectedRoute>
-              <Component />
+              <RenderLayout layout={Layout}>
+                <Component />
+              </RenderLayout>
             </ProtectedRoute>
           }
           path={path}

@@ -1,45 +1,45 @@
 import { FC } from "react";
 import { Modal, ModalContent, ModalHeader } from "@nextui-org/react";
-import { backendApi } from "../../shared/api";
-import { Project } from "../../shared/api/types";
-import { SubmitForm, SubmitFormField } from "../submit-form";
+import { Project } from "../../../../shared/api/types";
+import { SubmitForm, SubmitFormField } from "../../../submit-form";
+import { backendApi } from "../../../../shared/api";
 
 export type EditProjectModalProps = {
+  project: Project | null;
   onModalClose?: () => void;
-  isModalOpen: boolean;
 };
 
-export const AddProjectModal: FC<EditProjectModalProps> = ({
+export const EditProjectModal: FC<EditProjectModalProps> = ({
+  project,
   onModalClose,
-  isModalOpen,
 }) => {
-  const fields: SubmitFormField[] = [
-    "name",
-    "description",
-    "href",
-    "img",
-    "githubUrl",
-  ].map((item) => {
-    return {
-      name: item,
-      required: false,
-      displayName: item.charAt(0).toUpperCase() + item.slice(1),
-    };
-  });
+  console.log(project);
+  if (!project) return null;
+
+  const fields: SubmitFormField[] = Object.entries(project).map(
+    ([key, value]) => {
+      return {
+        name: key,
+        required: false,
+        displayName: key.charAt(0).toUpperCase() + key.slice(1),
+        defaultValue: value,
+      };
+    }
+  );
 
   async function handleSubmitForm(obj: Record<string, string | number>) {
     const project = obj as Project;
-    await backendApi.createProject(project);
+    await backendApi.updateProject(project.id, project);
     onModalClose?.();
   }
 
   return (
-    <Modal isOpen={isModalOpen}>
+    <Modal isOpen={Boolean(project)}>
       <ModalContent>
         {(onClose) => (
           <div className="my-4">
             <ModalHeader className="flex flex-col gap-1">
-              Создать новый проект
+              Редактировать проект
             </ModalHeader>
             <SubmitForm
               onSubmit={async (event) => {

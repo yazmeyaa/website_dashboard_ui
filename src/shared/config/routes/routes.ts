@@ -2,7 +2,7 @@ import { ComponentType, PropsWithChildren } from "react";
 
 export enum RouteName {
     LOGIN_PAGE = "/login",
-    HOME_PAGE = "/"
+    HOME_PAGE = "/",
   }
   
   export interface RouteDescription {

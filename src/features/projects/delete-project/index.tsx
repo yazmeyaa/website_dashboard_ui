@@ -1,5 +1,4 @@
 import { FC } from "react";
-import { Project } from "../../shared/api/types";
 import {
   Modal,
   ModalBody,
@@ -9,6 +8,7 @@ import {
 } from "@nextui-org/modal";
 import { PrintProject } from "../print-project";
 import { Button } from "@nextui-org/react";
+import { Project } from "../../../shared/api/types";
 
 export type DeleteProjectModalProps = {
   project: Project | null;

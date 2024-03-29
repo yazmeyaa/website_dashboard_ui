@@ -1,77 +1,33 @@
 import { useEffect, useState } from "react";
-import { Project } from "../../shared/api/types";
-import { backendApi } from "../../shared/api";
+
+import { useUnit } from "effector-react";
+import {
+  $projects,
+  fetchProjectsFx,
+} from "../../features/projects/model/model";
+import { AddProjectModal } from "../../features/projects/add-project";
+import { Button } from "@nextui-org/react";
 import { ProjectsTable } from "./ui/table";
-import { EditProjectModal } from "../../features/edit-project/ui/edit-project";
-import { Button, Spacer } from "@nextui-org/react";
-import { AddProjectModal } from "../../features/add-project";
-import { DeleteProjectModal } from "../../features/delete-project";
 
 export const ManageProjectsTable = () => {
-  const [data, setData] = useState<Project[] | null>(null);
-  const [editingProject, setEditingProject] = useState<Project | null>(null);
-  const [deleteProjectModal, setDeleteProjectModal] = useState<Project | null>(
-    null
-  );
+  null;
   const [addProjectModalOpen, setAddProjectModalOpen] = useState(false);
-
-  async function fetchProjectsList() {
-    const data = await backendApi.getProjectList();
-    setData(data);
-  }
-
+  const projects = useUnit($projects);
   useEffect(() => {
-    fetchProjectsList();
+    fetchProjectsFx();
   }, []);
-
-  function handleEditProject(project: Project) {
-    setEditingProject(project);
-    fetchProjectsList();
-  }
-
-  function handleDeteleProject(project: Project) {
-    setDeleteProjectModal(project);
-  }
-
-  async function handleDeteleProjectFromModal(project: Project | null) {
-    if (!project) {
-      setDeleteProjectModal(null);
-      return;
-    }
-    setDeleteProjectModal(null);
-    await backendApi.deleteProject(project.id);
-    fetchProjectsList();
-  }
 
   return (
     <div className="px-6">
-      <div>
-        <DeleteProjectModal
-          project={deleteProjectModal}
-          onProjectDelete={handleDeteleProjectFromModal}
-        />
-        <EditProjectModal
-          onModalClose={() => {
-            setEditingProject(null);
-            fetchProjectsList();
-          }}
-          project={editingProject}
-        />
-        <AddProjectModal
-          isModalOpen={addProjectModalOpen}
-          onModalClose={() => {
-            setAddProjectModalOpen(false);
-            fetchProjectsList();
-          }}
-        />
-        <Spacer />
-        <ProjectsTable
-          onProjectEdit={handleEditProject}
-          onProjectDelete={handleDeteleProject}
-          projects={data}
-        />
-        <Spacer />
+      <AddProjectModal
+        isModalOpen={addProjectModalOpen}
+        onModalClose={() => {
+          setAddProjectModalOpen(false);
+        }}
+      />
+      <div className="w-full flex flex-row-reverse pt-4">
         <Button
+          className=""
           variant="bordered"
           color="primary"
           onClick={() => setAddProjectModalOpen(true)}
@@ -79,6 +35,7 @@ export const ManageProjectsTable = () => {
           Добавить проект
         </Button>
       </div>
+      <ProjectsTable projects={projects} />
     </div>
   );
 };

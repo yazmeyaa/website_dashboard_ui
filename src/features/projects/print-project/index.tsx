@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Project } from "../../shared/api/types";
+import { Project } from "../../../shared/api/types";
 
 export type PrintProjectProps = {
   project: Project;
@@ -17,6 +17,7 @@ export const PrintProject: FC<PrintProjectProps> = ({ project }) => {
       <div>
         {fields.map((field) => (
           <PrintField
+            key={`field_${field.field}__value_${field.value}`}
             field={field.field}
             value={
               typeof field.value === "number"
@@ -33,7 +34,7 @@ export const PrintProject: FC<PrintProjectProps> = ({ project }) => {
 const PrintField: FC<{ field: string; value: string }> = ({ field, value }) => {
   return (
     <div>
-      <strong>{field}:{" "}</strong>
+      <strong>{field}: </strong>
       <span>{value} </span>
     </div>
   );

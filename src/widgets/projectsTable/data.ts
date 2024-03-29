@@ -5,5 +5,4 @@ export const columns = [
   { name: "href", uid: "href" },
   { name: "img", uid: "img" },
   { name: "githubUrl", uid: "githubUrl" },
-  { name: "actions", uid: "actions" },
 ];

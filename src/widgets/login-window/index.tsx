@@ -13,7 +13,7 @@ export const LoginWindow = () => {
     },
   ];
 
-  function handleSubmitForm(obj: Record<string, string>) {
+  function handleSubmitForm(obj: Record<string, string | number>) {
     backendApi.login(obj as AuthCredentails).then(console.log);
   }
   return (

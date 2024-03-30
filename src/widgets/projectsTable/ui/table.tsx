@@ -50,7 +50,10 @@ export const ProjectsTable: FC<ProjectsTableProps> = ({ projects }) => {
               {(columnKey) => (
                 <TableCell>
                   <TruncateText>
-                    {item[columnKey as keyof typeof item]}
+                    {item[columnKey as keyof typeof item] === "" ||
+                    item[columnKey as keyof typeof item] === undefined
+                      ? "<EMPTY STRING>"
+                      : item[columnKey as keyof typeof item]}
                   </TruncateText>
                 </TableCell>
               )}

@@ -89,4 +89,4 @@ export class BackendApi {
 }
 
 // export const backendApi = new BackendApi("http://localhost:3000/api");
-export const backendApi = new BackendApi("https://api.yazmeyaa.itracers.xyz");
+export const backendApi = new BackendApi("https://api.yazmeyaa.itracers.xyz/api");

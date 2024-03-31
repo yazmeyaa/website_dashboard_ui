@@ -10,7 +10,6 @@ export default defineConfig(({ mode }) => {
   dotenv.config({ path: envFile });
   return {
     plugins: [react()],
-    base: "/admin",
     build: {
       outDir: "build",
       assetsDir: "assets",

@@ -23,7 +23,7 @@ export class BackendApi {
   private createInstance(): AxiosInstance {
     const instance = axios.create({
       headers: {
-        Authorization: `Bearer ${this.token}` ?? undefined,
+        Authorization: `Bearer ${this.token}`,
         "Content-Type": "application/json",
       },
       baseURL: this.baseUrl,
@@ -42,7 +42,7 @@ export class BackendApi {
       "/projects"
     );
 
-    return response.data.data;
+    return response.data;
   }
 
   public async getProject(id: string | number): Promise<Project> {
@@ -50,7 +50,7 @@ export class BackendApi {
       `/projects/${id}`
     );
 
-    return response.data.data;
+    return response.data;
   }
 
   public async createProject(
